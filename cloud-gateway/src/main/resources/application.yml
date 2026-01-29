@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # Route for Books Catalogue microservice
+        - id: ms-books-catalogue
+          uri: lb://ms-books-catalogue
+          predicates:
+            - Path=/api/books/**
+          filters:
+            - StripPrefix=0
+        
+        # Route for Payments microservice
+        - id: ms-books-payments
+          uri: lb://ms-books-payments
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - StripPrefix=0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,routes,gateway
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.relatosdepapel.gateway: DEBUG
