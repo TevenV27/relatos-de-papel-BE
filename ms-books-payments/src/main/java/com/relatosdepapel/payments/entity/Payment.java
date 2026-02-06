@@ -15,9 +15,6 @@ public class Payment {
     @Column(name = "book_id", nullable = false)
     private Long bookId;
 
-    @Column(name = "book_title", nullable = false)
-    private String bookTitle;
-
     @Column(nullable = false)
     private Integer quantity = 1;
 
@@ -68,14 +65,6 @@ public class Payment {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
-    }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
     }
 
     public Integer getQuantity() {

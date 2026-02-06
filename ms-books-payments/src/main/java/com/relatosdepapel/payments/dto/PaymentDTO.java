@@ -7,7 +7,6 @@ public class PaymentDTO {
 
     private Long id;
     private Long bookId;
-    private String bookTitle;
     private Integer quantity = 1;
     private BigDecimal unitPrice;
     private BigDecimal totalAmount;
@@ -38,14 +37,6 @@ public class PaymentDTO {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
-    }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
     }
 
     public Integer getQuantity() {

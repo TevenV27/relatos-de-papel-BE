@@ -54,11 +54,28 @@ public class PaymentServiceImpl implements PaymentService {
         Payment existing = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException(PAYMENT_NOT_FOUND));
 
+        // Validaciones
+        if (paymentDTO.getBookId() == null) {
+            throw new IllegalArgumentException("bookId is required");
+        }
+        if (paymentDTO.getCustomerName() == null || paymentDTO.getCustomerName().isBlank()) {
+            throw new IllegalArgumentException("customerName is required");
+        }
+        if (paymentDTO.getCustomerEmail() == null || paymentDTO.getCustomerEmail().isBlank()) {
+            throw new IllegalArgumentException("customerEmail is required");
+        }
+
         existing.setBookId(paymentDTO.getBookId());
-        existing.setBookTitle(paymentDTO.getBookTitle());
-        existing.setQuantity(paymentDTO.getQuantity());
+        existing.setQuantity(paymentDTO.getQuantity() != null ? paymentDTO.getQuantity() : 1);
         existing.setUnitPrice(paymentDTO.getUnitPrice());
-        existing.setTotalAmount(paymentDTO.getTotalAmount());
+        
+        // Calcular totalAmount si no viene
+        if (paymentDTO.getTotalAmount() == null && paymentDTO.getUnitPrice() != null) {
+            existing.setTotalAmount(paymentDTO.getUnitPrice().multiply(BigDecimal.valueOf(existing.getQuantity())));
+        } else {
+            existing.setTotalAmount(paymentDTO.getTotalAmount());
+        }
+        
         existing.setCustomerName(paymentDTO.getCustomerName());
         existing.setCustomerEmail(paymentDTO.getCustomerEmail());
         existing.setStatus(paymentDTO.getStatus());
@@ -77,7 +94,6 @@ public class PaymentServiceImpl implements PaymentService {
         fields.forEach((key, value) -> {
             switch (key) {
                 case "bookId" -> existing.setBookId(((Number) value).longValue());
-                case "bookTitle" -> existing.setBookTitle((String) value);
                 case "quantity" -> existing.setQuantity((Integer) value);
                 case "unitPrice" -> existing.setUnitPrice(new java.math.BigDecimal(value.toString()));
                 case "totalAmount" -> existing.setTotalAmount(new java.math.BigDecimal(value.toString()));
@@ -142,7 +158,6 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentDTO dto = new PaymentDTO();
         dto.setId(payment.getId());
         dto.setBookId(payment.getBookId());
-        dto.setBookTitle(payment.getBookTitle());
         dto.setQuantity(payment.getQuantity());
         dto.setUnitPrice(payment.getUnitPrice());
         dto.setTotalAmount(payment.getTotalAmount());
@@ -159,7 +174,6 @@ public class PaymentServiceImpl implements PaymentService {
     private Payment mapToEntity(PaymentDTO dto) {
         Payment payment = new Payment();
         payment.setBookId(dto.getBookId());
-        payment.setBookTitle(dto.getBookTitle() != null ? dto.getBookTitle() : "Libro #" + dto.getBookId());
         payment.setQuantity(dto.getQuantity() != null ? dto.getQuantity() : 1);
         BigDecimal price = dto.getUnitPrice() != null ? dto.getUnitPrice() : dto.getAmount();
         BigDecimal total = dto.getTotalAmount() != null ? dto.getTotalAmount() : (dto.getAmount() != null ? dto.getAmount() : BigDecimal.ZERO);
