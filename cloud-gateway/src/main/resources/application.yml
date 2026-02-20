@@ -68,7 +68,7 @@ spring:
         - id: ms-users
           uri: lb://ms-users
           predicates:
-            - Path=/api/auth/**, /api/users/**
+            - Path=/api/login, /api/register, /api/auth/**, /api/users/**
           filters:
             - StripPrefix=0
         
