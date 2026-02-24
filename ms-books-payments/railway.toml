@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "ms-books-payments/Dockerfile"
+dockerContextDir = "."
 
 [deploy]
 healthcheckPath = "/actuator/health"

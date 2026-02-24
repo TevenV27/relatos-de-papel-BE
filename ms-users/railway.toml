@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "cloud-gateway/Dockerfile"
+dockerfilePath = "ms-users/Dockerfile"
 dockerContextDir = "."
 
 [deploy]
