@@ -19,6 +19,7 @@ Ver **`IMPLEMENTATION_GUIDE.md`** para instrucciones detalladas de implementaci�
 ## Architecture Overview
 
 
+
 ```
 ┌─────────────┐
 │   Client    │
